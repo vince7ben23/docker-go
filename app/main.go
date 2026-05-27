@@ -21,11 +21,10 @@ func main() {
 	args := os.Args[4:len(os.Args)]
 
 	cmd := exec.Command(command, args...)
-	output, err := cmd.Output()
+	_, err := cmd.Output()
 	if err != nil {
 		fmt.Printf("Err: %v", err)
 		os.Exit(1)
 	}
 
-	fmt.Println(string(output))
 }
