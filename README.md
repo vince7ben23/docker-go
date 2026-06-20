@@ -1,50 +1,32 @@
-[![progress-banner](https://backend.codecrafters.io/progress/docker/91c3511b-70e3-4332-bf1f-ba51a3b10b59)](https://app.codecrafters.io/users/vince7ben23?r=2qF)
+# docker-from-scratch
 
-This is a starting point for Go solutions to the
-["Build Your Own Docker" Challenge](https://codecrafters.io/challenges/docker).
+A Docker implementation built from scratch in Go. Pulls images from Docker Hub and executes commands inside isolated environments using chroot, Linux kernel namespaces, and the Docker Registry API.
 
-In this challenge, you'll build a program that can pull an image from
-[Docker Hub](https://hub.docker.com/) and execute commands in it. Along the way,
-we'll learn about [chroot](https://en.wikipedia.org/wiki/Chroot),
-[kernel namespaces](https://en.wikipedia.org/wiki/Linux_namespaces), the
-[docker registry API](https://docs.docker.com/registry/spec/api/) and much more.
+## Usage
 
-**Note**: If you're viewing this repo on GitHub, head over to
-[codecrafters.io](https://codecrafters.io) to try the challenge.
-
-# Passing the first stage
-
-The entry point for your Docker implementation is `app/main.go`. Study and
-uncomment the relevant code, and push your changes to pass the first stage:
-
+**Stage 1 — run a command directly:**
 ```sh
-git commit -am "pass 1st stage" # any msg
-git push origin master
+./bootstrap.sh run <image> <command> [args...]
 ```
 
-That's all!
-
-# Stage 2 & beyond
-
-Note: This section is for stages 2 and beyond.
-
-You'll use linux-specific syscalls in this challenge. so we'll run your code
-_inside_ a Docker container.
-
-Please ensure you have [Docker installed](https://docs.docker.com/get-docker/)
-locally.
-
-Next, add a [shell alias](https://shapeshed.com/unix-alias/):
-
+**Stage 2+ — requires Linux syscalls (must run inside Docker):**
 ```sh
-alias mydocker='docker build -t mydocker . && docker run --cap-add="SYS_ADMIN" mydocker'
-```
+alias mydocker='docker build -t docker_from_scratch . && docker run --cap-add="SYS_ADMIN" docker_from_scratch'
 
-(The `--cap-add="SYS_ADMIN"` flag is required to create
-[PID Namespaces](https://man7.org/linux/man-pages/man7/pid_namespaces.7.html))
-
-You can now execute your program like this:
-
-```sh
 mydocker run alpine:latest /usr/local/bin/docker-explorer echo hey
+
+# means you execute
+docker build -t docker_from_scratch . && docker run --cap-add="SYS_ADMIN" docker_from_scratch run alpine:latest /usr/local/bin/docker-explorer echo hey
 ```
+
+The `--cap-add="SYS_ADMIN"` flag is required for [PID namespace](https://man7.org/linux/man-pages/man7/pid_namespaces.7.html) creation.
+
+## Development
+
+```sh
+go build -o /tmp ./app/...
+go test -timeout 10s ./app/...
+go vet ./...
+```
+
+Pre-commit hooks run `gofmt`, `go vet`, `go build`, and `go test` automatically.
