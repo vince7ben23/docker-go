@@ -6,7 +6,7 @@ A Docker implementation built from scratch in Go. Pulls images from Docker Hub a
 
 **Stage 1 — run a command directly:**
 ```sh
-./bootstrap.sh run <image> <command> [args...]
+./your_docker.sh run <image> <command path> [args...]
 ```
 
 **Stage 2+ — requires Linux syscalls (must run inside Docker):**
@@ -24,7 +24,7 @@ The `--cap-add="SYS_ADMIN"` flag is required for [PID namespace](https://man7.or
 ## Troubleshooting: `bad CPU type in executable`                                                                                                                                                     
 如果你在 Apple Silicon 的 macOS host 上直接執行 Stage 2+（而不是在 Docker 容器內執行），可能會看到：
 
-```
+```sh
 Err: fork/exec /usr/local/bin/docker-explorer: bad CPU type in executable
 ```
 
@@ -39,3 +39,9 @@ go vet ./...
 ```
 
 Pre-commit hooks run `gofmt`, `go vet`, `go build`, and `go test` automatically.
+
+To run the hooks manually against all files (not just staged ones):
+
+```zsh
+pre-commit run -a
+```

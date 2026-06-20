@@ -24,9 +24,14 @@ go vet ./...
 gofmt -w .
 ```
 
+**Run pre-commit hooks against all files:**
+```sh
+pre-commit run -a
+```
+
 **Run (Stage 1 — no Linux syscalls needed):**
 ```sh
-./bootstrap.sh run <image> <command> [args...]
+./your_docker.sh run <image> <command path> [args...]
 ```
 
 **Run (Stage 2+ — requires Linux syscalls, must run inside Docker):**
@@ -42,9 +47,9 @@ The `--cap-add="SYS_ADMIN"` flag is required for PID namespace creation.
 
 ## Architecture
 
-**Entry point:** `app/main.go` — `main()` reads CLI arguments in the form `run <image> <command> [args...]`, so `os.Args[2]` is the image, `os.Args[3]` is the command, and `os.Args[4:]` are its arguments.
+**Entry point:** `app/main.go` — `main()` reads CLI arguments in the form `run <image> <command path> [args...]`, so `os.Args[2]` is the image, `os.Args[3]` is the command, and `os.Args[4:]` are its arguments.
 
-**Bootstrap:** `bootstrap.sh` compiles the Go binary and passes all arguments through to it. The Dockerfile sets this as the container ENTRYPOINT.
+**Bootstrap:** `your_docker.sh` compiles the Go binary and passes all arguments through to it. The Dockerfile sets this as the container ENTRYPOINT.
 
 **Test utility:** `docker-explorer` (downloaded into the container at `/usr/local/bin/docker-explorer`) is a CodeCrafters-provided binary used to test Docker Registry API and namespace features.
 
