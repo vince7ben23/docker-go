@@ -10,6 +10,6 @@ RUN chmod +x /usr/local/bin/docker-explorer
 COPY . /app
 WORKDIR /app
 
-RUN sed -i -e 's/\r$//' /app/bootstrap.sh
+RUN sed -i -e 's/\r$//' /app/your_docker.sh
 
-ENTRYPOINT ["/app/bootstrap.sh"]
+ENTRYPOINT ["/app/your_docker.sh"]

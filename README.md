@@ -21,6 +21,15 @@ docker build -t docker_from_scratch . && docker run --cap-add="SYS_ADMIN" docker
 
 The `--cap-add="SYS_ADMIN"` flag is required for [PID namespace](https://man7.org/linux/man-pages/man7/pid_namespaces.7.html) creation.
 
+## Troubleshooting: `bad CPU type in executable`                                                                                                                                                     
+如果你在 Apple Silicon 的 macOS host 上直接執行 Stage 2+（而不是在 Docker 容器內執行），可能會看到：
+
+```
+Err: fork/exec /usr/local/bin/docker-explorer: bad CPU type in executable
+```
+
+這是因為 `docker-explorer` 是 x86_64 的執行檔。在 Apple Silicon 上，macOS 原本會透過 Rosetta 2 自動轉譯執行它，但程式呼叫 `syscall.Chroot` 之後，Rosetta 無法再存取轉譯所需的系統路徑，導致執行失敗。請務必照上方說明在 Linux 容器內執行 Stage 2+，不要直接在 macOS host 上執行。
+
 ## Development
 
 ```sh
