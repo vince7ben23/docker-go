@@ -9,7 +9,10 @@ A Docker implementation built from scratch in Go. Pulls images from Docker Hub a
 ./your_docker.sh run <image> <command path> [args...]
 ```
 
-**Stage 2+ — requires Linux syscalls (must run inside Docker):**
+**Stage 2+ — requires Linux syscalls:**
+
+Note: run inside Docker to use its built-in Linux kernel, or run the code directly on a Linux machine. 
+
 ```sh
 alias mydocker='docker build -t docker_from_scratch . && docker run --cap-add="SYS_ADMIN" docker_from_scratch'
 
@@ -21,7 +24,7 @@ docker build -t docker_from_scratch . && docker run --cap-add="SYS_ADMIN" docker
 
 The `--cap-add="SYS_ADMIN"` flag is required for [PID namespace](https://man7.org/linux/man-pages/man7/pid_namespaces.7.html) creation.
 
-## Troubleshooting: `bad CPU type in executable`                                                                                                                                                     
+## Known issue: `bad CPU type in executable`                                                                                                                                                     
 如果你在 Apple Silicon 的 macOS host 上直接執行 Stage 2+（而不是在 Docker 容器內執行），可能會看到：
 
 ```sh
@@ -42,7 +45,7 @@ GOOS=linux go vet ./...
 
 Pre-commit hooks run `gofmt`, `go vet`, `go build`, and `go test` automatically.
 
-install hooks, one time effort
+Install hooks (one-time setup):
 ```sh
 pre-commit install --install-hooks
 ```
