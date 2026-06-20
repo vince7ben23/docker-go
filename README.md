@@ -32,16 +32,22 @@ Err: fork/exec /usr/local/bin/docker-explorer: bad CPU type in executable
 
 ## Development
 
+`app/main.go` 帶有 `//go:build linux`，在 macOS 上要加 `GOOS=linux` 才能編譯/檢查：
+
 ```sh
-go build -o /tmp ./app/...
-go test -timeout 10s ./app/...
-go vet ./...
+GOOS=linux go build -o /tmp ./app/...
+GOOS=linux go test -timeout 10s ./app/...
+GOOS=linux go vet ./...
 ```
 
 Pre-commit hooks run `gofmt`, `go vet`, `go build`, and `go test` automatically.
 
-To run the hooks manually against all files (not just staged ones):
+install hooks, one time effort
+```sh
+pre-commit install --install-hooks
+```
 
-```zsh
+To run the hooks manually against all files (not just staged ones):
+```sh
 pre-commit run -a
 ```

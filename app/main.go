@@ -1,3 +1,5 @@
+//go:build linux
+
 package main
 
 import (
@@ -23,6 +25,7 @@ func main() {
 	}
 	defer os.RemoveAll(rootDir)
 
+	// file system isolation
 	if err := copyBinary(commandPath, rootDir); err != nil {
 		fmt.Printf("Err copying binary: %v\n", err)
 		os.Exit(1)
@@ -41,6 +44,16 @@ func main() {
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+
+	// process isolation
+	// Cloneflags and CLONE_NEWPID are Linux-only fields/constants on syscall.SysProcAttr.
+	// Editing/building on macOS uses the darwin syscall package, which defines neither,
+	// so gopls/go build will flag them as undefined there. This file is meant to be
+	// compiled inside the Linux container (per your_docker.sh / Dockerfile), where
+	// GOOS=linux and both symbols exist.
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		Cloneflags: syscall.CLONE_NEWNS | syscall.CLONE_NEWPID,
+	}
 
 	err = cmd.Run()
 	if err != nil {

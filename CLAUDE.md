@@ -8,19 +8,21 @@ This is a Go implementation of the CodeCrafters ["Build Your Own Docker" challen
 
 ## Commands
 
+`app/main.go` has a `//go:build linux` constraint, so on non-Linux hosts (e.g. macOS) set `GOOS=linux` for build/vet/test commands to find the package.
+
 **Build:**
 ```sh
-go build -o /tmp ./app/...
+GOOS=linux go build -o /tmp ./app/...
 ```
 
 **Test:**
 ```sh
-go test -timeout 10s ./app/...
+GOOS=linux go test -timeout 10s ./app/...
 ```
 
 **Vet / Format:**
 ```sh
-go vet ./...
+GOOS=linux go vet ./...
 gofmt -w .
 ```
 

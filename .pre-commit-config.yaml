@@ -10,20 +10,20 @@ repos:
       - id: go-vet
         name: go vet
         language: system
-        entry: go vet ./...
+        entry: env GOOS=linux go vet ./...
         pass_filenames: false
         types: [go]
 
       - id: go-build
         name: go build
         language: system
-        entry: go build -o /tmp ./app/... 
+        entry: env GOOS=linux go build -o /tmp ./app/...
         pass_filenames: false
         types: [go]
 
       - id: go-test
         name: go test
         language: system
-        entry: go test -timeout 10s ./app/...
+        entry: env GOOS=linux go test -timeout 10s ./app/...
         pass_filenames: false
         types: [go]
